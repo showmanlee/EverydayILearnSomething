@@ -1,4 +1,4 @@
-# Everyday I Learn Something
+# Everyday I Learn Something *(I forgot or new)*
 
 > [*선생님! 선생님! 선생님! 이제야 알았어요! __제가 잘못 배웠다는 거를...__*](https://youtu.be/ntceIB35OTg?t=191)
 
