@@ -319,6 +319,7 @@ vector<int> countingSort(vector<int> arr, int max){
         res[count[arr[i]]] = arr[i];
         count[arr[i]]--;
     }
+    return res;
 }
 ```
 
