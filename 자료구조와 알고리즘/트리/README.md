@@ -2,6 +2,8 @@
 
 **비선형 자료구조**이자 **그래프**의 일종으로, **0개 이상의 자식 노드를 가진 노드들로 구성**된 계층 형태의 연결 그래프이다. `사이클이 없는 그래프`(*Directed Acyclic Graphs; **DAG***)로도 정의할 수 있다.
 
+> 구현 코드는 나중에 손볼 필요 있음
+
 ### 개념과 용어
 
 ```c++
@@ -91,6 +93,8 @@ struct Node{
 
 ### 이진 탐색 트리(*Binary Search Tree; **BST***)
 
+ * [알고리즘 시각화](https://www.cs.usfca.edu/~galles/visualization/BST.html)
+
 효율적인 탐색을 위해 이진 트리 구조를 이용한 자료구조이다. 이진 탐색 트리는 다음과 같은 특성이 있다.
 
  * **모든 노드의 키는 유일하다.**
@@ -108,128 +112,207 @@ struct Node{
 ```c++
 struct node{
   int num;
-  node* left, right;
+  node* left;
+  node* right;
 };
-class BST{
-  node* root;
+class BST {
+	node* root;
 public:
-  // 선언
-  BST(){
-    root = NULL;
-  }
+	// 선언
+	BST() {
+		root = NULL;
+	}
 
-  // 삽입
-  void insert(int n){
-    if (root == NULL){              // 첫 삽입
-      root = new node;
-      root->num = n;
-      root->left = root->right = NULL;
-    }
-    else{                           // 이후 삽입
-      node* cur = root;             // 커서
-      while(true){
-        if (cur->num > n){          // 왼쪽
-          if (cur->left == NULL){   // 신규 삽입
-            cur->left = new node;
-            cur->num = n;
-            cur->left->left = cur->left->right = NULL;
-            break;
-          }
-          else                      // 다음 노드로
-            cur = cur->left;
-        }
-        else if (cur->num < n){     // 오른쪽
-          if (cur->right == NULL){   // 신규 삽입
-            cur->right = new node;
-            cur->num = n;
-            cur->right->left = cur->right->right = NULL;
-            break;
-          }
-          else                      // 다음 노드로
-            cur = cur->right;
-        }
-        else                        // 중복일 경우 삽입 안함
-          break;
-      }
-    }
-  }
+	// 삽입
+	void insert(int n) {
+		if (root == NULL) {              // 첫 삽입
+			root = new node;
+			root->num = n;
+			root->left = root->right = NULL;
+		}
+		else {                           // 이후 삽입
+			node* cur = root;             // 커서
+			while (true) {
+				if (cur->num > n) {          // 왼쪽
+					if (cur->left == NULL) {   // 신규 삽입
+						cur->left = new node;
+						cur->left-> num = n;
+						cur->left->left = cur->left->right = NULL;
+						break;
+					}
+					else                      // 다음 노드로
+						cur = cur->left;
+				}
+				else if (cur->num < n) {     // 오른쪽
+					if (cur->right == NULL) {   // 신규 삽입
+						cur->right = new node;
+						cur->right->num = n;
+						cur->right->left = cur->right->right = NULL;
+						break;
+					}
+					else                      // 다음 노드로
+						cur = cur->right;
+				}
+				else                        // 중복일 경우 삽입 안함
+					break;
+			}
+		}
+	}
 
-  // 탐색
-  bool search(int n){
-    node* cur = root;       // 커서
-    while(cur != NULL){
-      if (cur->num == n)    // 검색 성공
-        return true;
-      if (cur->num < n)     // 커서 옮기기
-        cur = cur->left;
-      else
-        cur = cur->right;
-    }
-    return false;           // NULL이므로 검색 실패
-  }
+	// 탐색
+	bool search(int n) {
+		node* cur = root;       // 커서
+		while (cur != NULL) {
+			if (cur->num == n)    // 검색 성공
+				return true;
+			if (cur->num < n)     // 커서 옮기기
+				cur = cur->left;
+			else
+				cur = cur->right;
+		}
+		return false;           // NULL이므로 검색 실패
+	}
 
-  // 삭제
-  void remove(int n){
-    node* cur = root;       // 커서
-    node* parent = NULL;    // 커서의 부모
-    while(cur != NULL){     // 지워야 할 노드 검색
-      if (cur->num == n)    
-        break;
-      parent = cur;         // 부모 노드 저장
-      if (cur->num < n)     
-        cur = cur->left;
-      else
-        cur = cur->right;
-    }
-    if (cur == NULL)        // 지워야 할 노드가 없다면 패스
-      return;
+	// 삭제
+	void remove(int n) {
+		node* cur = root;       // 커서
+		node* parent = NULL;    // 커서의 부모
+		while (cur != NULL) {     // 지워야 할 노드 검색
+			if (cur->num == n)
+				break;
+			parent = cur;         // 부모 노드 저장
+			if (cur->num < n)
+				cur = cur->left;
+			else
+				cur = cur->right;
+		}
+		if (cur == NULL)        // 지워야 할 노드가 없다면 패스
+			return;
 
-    if (cur->left == NULL && cur->right == NULL){         // 지워야 할 노드가 말단 노드라면
-      if (parent == NULL)            // 루트 노드를 지워야 한다면
-        root = NULL;
-      else if (parent->left == cur)  // 부모의 왼쪽 또는 오른쪽 제거
-        parent->left = NULL;
-      else
-        parent->right = NULL;
-      delete cur;
-    }
-    else if (cur->left == NULL || cur->right == NULL){    // 지워야 할 노드가 하나의 서브 트리를 가진다면
-      if (parent == NULL)           // 루트 노드를 지워야 한다면
-        root = NULL;
-      else{                         // 그렇지 않다면 - 내가 가진 서브 트리를 내가 연결됐던 부모의 서브 트리로 넘겨주기
-        node* serve = (cur->left == NULL) ? cur->right : cur->left;
-        if (parent->left == cur)  
-          parent->left = serve;
-        else
-          parent->right = serve; 
-      }
-      delete cur;
-    }
-    else{                                                 // 지워야 할 노드가 두 개의 서브 트리를 가진다면
-      // 지워야 할 노드의 왼쪽 서브 트리의 가장 큰 노드 또는 오른쪽 서브 트리의 가장 작은 노드를 선택해 지워야 할 노드의 서브 트리들을 연결한다.
-      node* replace_parent = cur;           // 교환할 노드의 부모
-      node* replace = cur->right;           // 교환할 노드
-      while(replace->left != NULL){         // 교환할 노드 찾기
-        replace_paernt = replace;
-        replace = replace->left;
-      }
-      // 이 시점에서 교환할 노드의 서브 트리는 하나밖에 없음
-      if (replace_parent->left == replace)      // 교환할 노드가 지워야할 노드 바로 아래 없다면
-        replace_parent->left = replace->right;  // 교환할 노드의 부모의 교환할 노드가 달렸던 서브트리를 교환할 노드의 남은 서브 트리로 변경
-      else                                      // 교환할 노드가 지워야할 노드 바로 아래 있다면
-        replace_parent->right = replace->right; // 지워야할 노드에 교환할 노드의 남은 서브 트리 장착
-      cur->num = replace->num;                  // 지워야 할 노드를 교환할 노드의 번호로 변경
-      delete replace;                           // 교환할 노드 삭제
-    }
-  }
+		if (cur->left == NULL && cur->right == NULL) {         // 지워야 할 노드가 말단 노드라면
+			if (parent == NULL)            // 루트 노드를 지워야 한다면
+				root = NULL;
+			else if (parent->left == cur)  // 부모의 왼쪽 또는 오른쪽 제거
+				parent->left = NULL;
+			else
+				parent->right = NULL;
+			delete cur;
+		}
+		else if (cur->left == NULL || cur->right == NULL) {    // 지워야 할 노드가 하나의 서브 트리를 가진다면
+			if (parent == NULL)           // 루트 노드를 지워야 한다면
+				root = NULL;
+			else {                         // 그렇지 않다면 - 내가 가진 서브 트리를 내가 연결됐던 부모의 서브 트리로 넘겨주기
+				node* serve = (cur->left == NULL) ? cur->right : cur->left;
+				if (parent->left == cur)
+					parent->left = serve;
+				else
+					parent->right = serve;
+			}
+			delete cur;
+		}
+		else {                                                 // 지워야 할 노드가 두 개의 서브 트리를 가진다면
+		  // 지워야 할 노드의 왼쪽 서브 트리의 가장 큰 노드 또는 오른쪽 서브 트리의 가장 작은 노드를 선택해 지워야 할 노드의 서브 트리들을 연결한다.
+			node* replace_parent = cur;           // 교환할 노드의 부모
+			node* replace = cur->right;           // 교환할 노드
+			while (replace->left != NULL) {         // 교환할 노드 찾기
+				replace_parent = replace;
+				replace = replace->left;
+			}
+			// 이 시점에서 교환할 노드의 서브 트리는 하나밖에 없음
+			if (replace_parent->left == replace)      // 교환할 노드가 지워야할 노드 바로 아래 없다면
+				replace_parent->left = replace->right;  // 교환할 노드의 부모의 교환할 노드가 달렸던 서브트리를 교환할 노드의 남은 서브 트리로 변경
+			else                                      // 교환할 노드가 지워야할 노드 바로 아래 있다면
+				replace_parent->right = replace->right; // 지워야할 노드에 교환할 노드의 남은 서브 트리 장착
+			cur->num = replace->num;                  // 지워야 할 노드를 교환할 노드의 번호로 변경
+			delete replace;                           // 교환할 노드 삭제
+		}
+	}
 };
 ```
+
 ### AVL 트리(*AVL Tree*)
+
+ * [알고리즘 시각화](https://www.cs.usfca.edu/~galles/visualization/AVLtree.html)
+
+노드에 ***Balance Factor(BF)*** 개념을 적용해 **자동으로 균형 이진 트리의 형태**가 되도록 만든 BST. BF는 `왼쪽 서브 트리의 높이 - 오른쪽 서브 트리의 높이`로, AVL에서는 노드 삽입/삭제 시 ***Rotation*** 과정을 통해 모든 노드의 BF값을 `-1~1`로 유지시킨다.
+
+Rotation 과정은 왼쪽/*오른쪽*으로 수행할 수 있다. 
+
+1. 자신(M)의 왼쪽/*오른쪽* 서브 트리의 루트 노드(A)를 자신의 위치로 옮긴다.
+2. 자신은 A의 오른쪽/*왼쪽* 노드로 들어간다.
+3. A에서 떨어져나간 A의 오른쪽/*왼쪽* 서브 트리를 자신의 왼쪽/*오른쪽* 서브 트리로 만든다.
+
+이를 그림과 코드로 구현하면 다음과 같다:
+
+```
+     P            P            P
+   M      ->    A     ->     A
+ A   c        a b M        a   M
+a b                c          b c
+```
+
+```c++
+// P에게 새롭게 바뀐 루트 노드를 반환(M->A)
+Node* rightRotation(Node* M){
+  Node* A = M->left;
+  Node* b = A->right;
+  A->right = M;
+  M->left = b;
+  return A;
+}
+P->left = rightRotation(P->left);
+// leftRotation은 여기서 L/R을 반대로
+```
+
+AVL 트리에서는 노드의 값과 함께 현재 노드의 높이도 같이 저장한다. 트리 삽입/삭제 과정에서 삽입/삭제 위치에서 루트 노드로 올라오면서 높이값을 갱신시켜주는데(`max(왼쪽 높이, 오른쪽 높이) + 1(NULL = 0)`), 이 때 `|왼쪽의 높이 - 오른쪽의 높이|`(`|BF|`)가 2 이상이 되면 Rotation을 수행한다. 이때 높이가 더 높은 서브 트리를 골라 4가지 Rotation 중 하나를 수행한다.
+
+```
+- X에서 불균형이 발생한(|BF| > 1) 상황
+- Y는 X의 서브 트리 중 높이가 더 높은 것
+- Z는 Y의 서브 트리 중 높이가 더 높은 것(두 서브 트리의 높이가 같다면 X-Y와 같은 방향의 것으로)
+
+X            X       X          X
+  Y        Y           Y      Y
+   Z      Z           Z        Z
+ (1)      (2)        (3)      (4)
+```
+
+ * (1) - RR 형태인 경우에는 X를 기준으로 `Left Rotation` 수행
+ * (2) - LL 형태인 경우에는 X를 기준으로 `Right Rotation` 수행
+ * (3) - RL 형태인 경우에는 Y를 기준으로 `Right Rotation` 수행 후 X를 기준으로 `Left Rotation` 수행
+ * (4) - LR 형태인 경우에는 Y를 기준으로 `Left Rotation` 수행 후 X를 기준으로 `Right Rotation` 수행
+
+이 과정에서 root가 바뀔 수 있으니 이를 고려해야 한다.
+
+삭제하려는 노드의 서브 트리가 하나 이하인 경우에는 (자신의 위치를 서브 트리에게 넘기고) 해당 위치에서 올라가며 높이를 체크하면 되지만, 서브 트리가 2개인 경우에는 왼쪽 서브 트리의 가장 큰 노드의 값을 삭제하려는 위치의 노드 값으로 가져온 후, 그 값이 있던 노드를 삭제하고 높이를 체크하면 된다.
 
 ### 레드-블랙 트리(*Red-Black Tree*)
 
+ * [알고리즘 시각화](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+
+모든 노드에 `Red`, `Black`의 색깔을 주어 **자동으로 균형 이진 트리의 형태**가 되도록 만든 BST. 알고리즘이 상당히 복잡하지만 평균적인 성능이 가장 좋아 실제 상황에서 자주 쓰이며, STL의 Map 역시 레드-블랙 트리 기반으로 구현되어 있다.
+
+레드-블랙 트리에서 모든 노드는 Red와 Black 등 두 가지 색깔 중 하나를 가질 수 있으며, 다음 조건에 맞춰 색상이 칠해진다.
+ 
+ * **루트 노드는 Black이다.**
+ * **모든 단말 노드(NIL)는 Black이다.**
+ * **Red 노드의 자식 노드들은 Black이다.** = *Red 노드는 연달아 나올 수 없다.*
+ * **루트 노드에서 단말 노드로 가는 경로들에는** (NIL을 제외하고) **모두 같은 양의 Black 노드가 있다.**
+
+이러한 조건이 만족되면 루트 노드에서 가장 먼 단말 노드와의 거리와 가장 가까운 거리의 차가 항상 두 배 미만으로 나게 된다. 항상 차를 1 이하로 유지하려고 하는 AVL 트리보다는 덜 균형적이나, 이정도 오차는 실무에서 큰 문제가 되지 않는다. BST를 생성하는 과정 역시 AVL 트리보다 더 효율적이다.
+
 ### B-트리(*B-Tree*)
+ 
+ * [알고리즘 시각화](https://www.cs.usfca.edu/~galles/visualization/BTree.html)
+
+#### B+ 트리(*B+ Tree*)
+
+ * [알고리즘 시각화](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
 
 ### 힙(*Heap*)
 
+ * [알고리즘 시각화](https://www.cs.usfca.edu/~galles/visualization/Heap.html)
+
 ### 트라이(*Trie*)
+
+ * [알고리즘 시각화](https://www.cs.usfca.edu/~galles/visualization/Trie.html)
