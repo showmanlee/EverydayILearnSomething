@@ -60,7 +60,7 @@ OSI(*Open System Interconnection*) 참조 모델은 ISO 제안한 프로토콜 �
 ### 7. 응용 계층(*Application Layer*)
 
  * 사용자가 네트워크에 접근할 수 있도록 하는 계층이다.
- * 관련 프로토콜: **HTTP, SMTP, SNMP, FTP, Telnet**
+ * 관련 프로토콜: **HTTP, SMTP, SNMP, DNS, FTP, Telnet**
 
 ## TCP/IP 참조 모델(TCP/IP 4계층)
 
