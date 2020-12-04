@@ -29,7 +29,7 @@
 struct node{
     int num;
     vector<node*> edge;
-    vector<int> weight;
+    vector<int> weight;	// 필요 시
 }
 
 node graph[10];
@@ -45,15 +45,75 @@ int graph[10][10];
 
 ### 순회
 
+그래프의 모든 노드를 한 번씩 방문하는 것으로, 기본적으로 연결 그래프여야 가능하다.
+
+그래프 순회 과정에서 같은 노드를 두 번 이상 방문할 수 없으며, 이에 대한 처리는 `visit` 배열로 한다.
+
 #### 깊이 우선 탐색(*Depth-First Search*)
+
+시작 노드에서 한 방향으로 갈 수 있을 만큼 방문하다가, 더 이상 진행할 수 없으면 경로를 따라 되돌아오면서 갈림길이 있는 노드의 다른 간선 방향으로 탐색을 진행한다.
+
+이 과정에서는 **재귀, 즉 스택**이 사용된다. 구현은 다음과 같다.
+
+```c++
+node graph[10];
+bool visit[10];
+
+void dfs(int n){
+	cout << n << ' ';
+	for (node* p : graph[n].edge){
+		if (!visit[p->num]){
+			visit[p->num] = true;
+			dfs(p->num);
+		}
+	}
+}
+
+int main(){
+	// 그래프 초기화 과정 생략
+	visit[0] = true;
+	dfs(0);
+}
+```
 
 #### 너비 우선 탐색(*Breadth-First Search*)
 
+시작 노드에서 뻗은 모든 간선의 노드를 방문한 후, 방문한 노드에서 뻗은 간선의 노드 차례로 반복하는 과정을 반복한다.
+
+이 과정에서는 **큐**가 사용된다. 구현은 다음과 같다.
+
+```c++
+node graph[10];
+bool visit[10];
+
+void bfs(int n){
+	queue<int> q;
+	q.push(n);
+	visit[n] = true;
+	while(!q.empty()){
+		int i = q.front();
+		q.pop();
+		cout << i << ' ';
+		for (node* p : graph[n].edge){
+			if (!visit[p->num]){
+				visit[p->num] = true;
+				q.push(p->num);
+			}
+		}
+	}
+}
+```
+
 ### 최소 신장 트리(*Minimum Spanning Tree*)
+
+**신장 트리(*Spanning Tree*)** 는 그래프에서 **`노드 개수 - 1`개의 간선을 선택하여 만들어지는 트리**(사이클 없는 그래프)이다. 신장 트리는 그래프 순회를 통해 만들 수 있다.
+
+**최소 신장 트리(*Minimum Spanning Tree*)** 는 신장 트리에서 사용된 **간선의 가중치 합이 가장 작은** 신장 트리이다. 즉, 가중치가 없는 트리에서는 MST 개념이 존재하지 않는다.
+
+#### 크루스칼 알고리즘(*Kruskal Algorithm*)
 
 #### 프림 알고리즘(*Prim Algorithm*)
 
-#### 크루스칼 알고리즘(*Kruskal Algorithm*)
 
 ### 그래프에서의 최단 경로 탐색
 
