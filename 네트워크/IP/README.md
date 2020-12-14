@@ -38,5 +38,24 @@ IP 헤더의 길이는 기본 20바이트로, 옵션에 따라 60바이트까지
 
 #### 헤더 구조
 
+IP 헤더의 길이는 40바이트로, 뒤에 확장 헤더가 더 달릴 수 있다.
+
+ * 0~3비트: *Version*
+   * IP 헤더의 버전(6)
+ * 4~11비트: *Traffic Class*
+   * 패킷의 서비스 요구 사항, IPv4의 *Type of Service* 와 같은 역할
+ * 12~31비트: *Flow Label*
+   * 흐름 처리를 위한 처리 제공
+ * 32~47비트: *Payload Length*
+   * 헤더를 제외한 데이터의 길이
+ * 48~55비트: *Next Header*
+   * 뒤에 어떤 확장 헤더가 있는지 표시
+ * 56~63비트: *Hop Limit*
+   * 패킷의 데이터가 유효한 기간, IPv4의 *Time to Live* 와 같은 역할
+ * 64~191비트: *Source IP Address*
+   * 송신지의 IP 주소
+ * 192~319비트: *Destination IP Address*
+   * 수신지의 IP 주소
+
 ### 전송 방식
 
