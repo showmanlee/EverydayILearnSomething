@@ -314,10 +314,10 @@ X            X       X          X
 ```
 
 > Z가 삽입된 상황에서, Y와 Z가 Red이다. 이 때...
-> * W가 Black이거나 없다면 **회전(*Restructuring*)**한다.
-> * W가 Red라면 **색상 변경(*Recoloring*)**한다.
+> * W가 Black이거나 없다면 **회전(*Restructuring*)** 한다.
+> * W가 Red라면 **색상 변경(*Recoloring*)** 한다.
 
-**회전(*Restructuring*)** 과정에서는 `X-Y-Z`의 모양을 보고 AVL 트리에서와 동일하게 회전한 뒤 부모 노드로 올라온 노드를 Black, 자식 노드들은 Red로 칠한다.
+**회전(*Restructuring*)** 과정에서는 `X-Y-Z`의 모양을 보고 AVL 트리와 같은 방법으로 회전한 뒤 부모 노드로 올라온 노드를 Black, 자식 노드들은 Red로 칠한다.
 
 **색상 변경(*Recoloring*)** 과정에서는 별도의 회전 없이 W와 Y를 Black으로, X를 Red로 칠한다(X가 루트 노드라면 다시 Black으로 칠한다). 이 때 Red 노드가 된 X에 의해 `3번 조건`이 위반된다면 X를 Z 위치로 삼아 `3번 조건` 위반을 해결한다.
 
