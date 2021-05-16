@@ -43,6 +43,12 @@ TCP에서 클라이언트-서버간 송수신 과정 전 논리적인 접속을 
 
 연결을 성립할 때 사용되는 *3-Way Handshake* 과정은 다음과 같다.
 
+```
+Client -> SYN
+          SYN + ACK <- Server
+Client -> ACK 
+```
+
 > 1. 클라이언트에서 서버에 `SYN(Synchronize Sequence Numbers)` 패킷을 보낸다. `SYN` 패킷은 접속을 요청하는 패킷으로, 클라이언트는 `SYN` 패킷을 보낸 이후 `SYN_SENT` 상태가 되어 서버의 `SYN+ACK` 패킷을 기다린다.
 > 2. 클라이언트의 `SYN` 패킷이 `LISTEN` 상태의 서버에 도달하면 서버는 접속 요청을 수락하는 `ACK(ACKnowledgements)` 패킷과 `SYN` 패킷을 보낸다. 이후 클라이언트는 `SYN_RECEOVED` 상태가 되어 클라이언트의 `ACK` 패킷을 기다린다.
 > 3. 서버의 `ACK+SYN` 패킷을 받은 클라이언트는 서버에서 `ACK` 패킷을 전송하고, `ESTABLISHED` 상태가 되어 통신 준비를 마친다. `ACK` 패킷을 받은 서버 또한 `ESTABLISHED` 상태가 되어 통신 상태에 돌입한다.
@@ -53,10 +59,17 @@ TCP에서 클라이언트-서버간 송수신 과정 전 논리적인 접속을 
 
 연결을 해제할 때 사용되는 *4-Way Handshake* 과정은 다음과 같다.
 
+```
+Client -> FIN
+               ACK <- Server
+               FIN <- Server
+Client -> ACK 
+```
+
 > 1. 클라이언트에서 `FIN` 패킷을 보낸다. `FIN` 패킷은 연결 종료를 요청하는 패킷으로, 클라이언트는 `FIN_WAIT_1` 상태가 되어 서버의 `ACK` 패킷을 기다린다.
-> 2. `FIN` 패킷을 받은 서버는 `CLOSE_WAIT` 상태가 되고, 종료 요청을 수락하는 `ACK` 패킷을 서버로 보낸다. 서버의 `ACK` 패킷을 받은 클라이언트는 `FIN_WAIT_2` 상태가 되어 서버의 `FIN` 패킷을 기다린다.
+> 2. `FIN` 패킷을 받은 서버는 `CLOSE_WAIT` 상태가 되고, 종료 요청을 수락하는 `ACK` 패킷을 클라이언트로 보낸다. 서버의 `ACK` 패킷을 받은 클라이언트는 `FIN_WAIT_2` 상태가 되어 서버의 `FIN` 패킷을 기다린다.
 > 3. 서버 애플리케이션의 연결 종료 과정이 끝나면 서버는 클라이언트에게 연결을 해제해도 좋다는 `FIN` 패킷을 보내고, 클라이언트의 `ACK` 패킷을 기다리는 `LAST_ACK` 상태가 된다.
-> 4. `FIN` 패킷을 받은 클라이언트는 서버에게 `ACK` 패킷을 보내고 `TIME_WAIT` 상태가 된다. `ACK` 패킷을 받는 서버는 `CLOSED` 상태가 되어 대기 상태에 돌입한다.
+> 4. `FIN` 패킷을 받은 클라이언트는 서버에게 `ACK` 패킷을 보내고 `TIME_WAIT` 상태가 되어 미처 받지 못한 패킷을 받기 위해 대기한다. `ACK` 패킷을 받는 서버는 `CLOSED` 상태가 되어 대기 상태에 돌입한다.
 > 5. 특정 시간(*Maximum Segment Life;**MSL***)이 지난 후, 클라이언트 역시 `CLOSED` 상태가 되어 다음 연결 요청 전까지 대기 상태에 돌입한다.
 
 ## UDP(*User Datagram Protocol*)
